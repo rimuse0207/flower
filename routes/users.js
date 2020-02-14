@@ -1,5 +1,23 @@
 var express = require("express");
+const request = require("request");
+const parser = require("xml2json");
 var router = express.Router();
+
+const HOST = "http://api.nongsaro.go.kr/service/garden/gardenList";
+const SERVICE_KEY = "20200206NNRF9K4P2NRBPWZJ2RC8GW";
+const requestUrl = `${HOST}?apiKey=${SERVICE_KEY}&&numOfRows=220`;
+
+var data;
+const datas = request(
+  {
+    url: requestUrl,
+    method: "GET"
+  },
+  (error, response, xml) => {
+    const json = JSON.parse(parser.toJson(xml));
+    data = json.response.body.items.item;
+  }
+);
 
 /* GET users listing. */
 router.all("/*", function(req, res, next) {
@@ -11,10 +29,8 @@ router.all("/*", function(req, res, next) {
 });
 
 router.get("/", function(req, res, next) {
-  res.json([
-    { eamil: "wqeqweqweqwe", password: "qweqweqwe" },
-    { eamil: "aasdasdqw", password: "somebasdqwody_els" }
-  ]);
+  datas;
+  res.json(data);
   res.send();
 });
 router.post("/login", (req, res) => {
