@@ -12,7 +12,7 @@ const requestUrl2 = `${HOST2}?apiKey=${SERVICE_KEY}&&cntntsNo=`;
 
 var data = [{}];
 var data3 = [{}];
-var data2 = [];
+var data2 = false;
 var data4 = [{}];
 {
   try {
@@ -23,22 +23,7 @@ var data4 = [{}];
       },
       (error, response, xml) => {
         const json = JSON.parse(parser.toJson(xml));
-
         data = json.response.body.items.item;
-
-        data.map(item => {
-          request(
-            {
-              url: `${requestUrl2}${item.cntntsNo}`,
-              method: "GET"
-            },
-            (error, response, xml) => {
-              const json = JSON.parse(parser.toJson(xml));
-              data4 = json.response.body.item;
-              data2.push(json.response.body.item);
-            }
-          );
-        });
       }
     );
   } catch (error) {
@@ -46,24 +31,8 @@ var data4 = [{}];
   }
 }
 
-// try {
-//   request(
-//     {
-//       url: requestUrl,
-//       method: "GET"
-//     },
-//     (error, response, xml) => {
-//       const json = JSON.parse(parser.toJson(xml));
-//       data4 = json.response.body.items.item;
-//     }
-//   );
-// } catch (error) {
-//   console.log("asdasd", error);
-// }
-
 const datas2 = async ip => {
   try {
-    console.log(`${requestUrl2}${ip}`);
     await request(
       {
         url: `${requestUrl2}${ip}`,
@@ -76,6 +45,8 @@ const datas2 = async ip => {
     );
   } catch (err) {
     console.log("Detail error ", err);
+  } finally {
+    data2 = true;
   }
 };
 
@@ -90,13 +61,24 @@ router.get("/", function(req, res, next) {
   res.send();
 });
 
-router.get("/qwe", function(req, res, next) {
+router.get("/qqq", function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Methods", "POST, PUT, GET, DELETE");
   res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
   res.header("Access-Control-Allow-Credentials", true);
-  res.json(data2);
-  res.send();
+  res.json(data3);
+
+  if (data3) {
+    return res.send();
+  }
+});
+
+router.post("/qwe", (req, res) => {
+  datas2(req.body.id);
+
+  if (data2) {
+    return res.send();
+  }
 });
 
 router.post("/login", (req, res) => {
@@ -110,16 +92,5 @@ router.post("/sinup", (req, res) => {
   console.log(req.body);
   console.log(req);
 });
-
-// router.get("/Detail", (req, res) => {
-//   var ip = req.param("ip");
-//   datas2(ip);
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//   res.header("Access-Control-Allow-Methods", "POST, PUT, GET, DELETE");
-//   res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-//   res.header("Access-Control-Allow-Credentials", true);
-//   res.json(data3);
-//   res.send();
-// });
 
 module.exports = router;
