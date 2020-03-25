@@ -24,6 +24,7 @@ var data4 = [{}];
       (error, response, xml) => {
         const json = JSON.parse(parser.toJson(xml));
         data = json.response.body.items.item;
+        console.log(requestUrl);
       }
     );
   } catch (error) {
@@ -53,19 +54,15 @@ const datas2 = async ip => {
 /* GET users listing. */
 
 router.get("/", function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Methods", "POST, PUT, GET, DELETE");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-  res.header("Access-Control-Allow-Credentials", true);
   res.json(data);
   res.send();
 });
 
 router.get("/qqq", function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Methods", "POST, PUT, GET, DELETE");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-  res.header("Access-Control-Allow-Credentials", true);
+  // res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  // res.header("Access-Control-Allow-Methods", "POST, PUT, GET, DELETE");
+  // res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+  // res.header("Access-Control-Allow-Credentials", true);
   res.json(data3);
 
   if (data3) {
